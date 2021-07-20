@@ -1,5 +1,8 @@
 package com.cognixia.jump.model;
 import java.io.Serializable;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -7,6 +10,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class UserModel implements Serializable{
@@ -25,6 +31,11 @@ public class UserModel implements Serializable{
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Role role;
+	
+	@OneToMany( mappedBy = "user", cascade = CascadeType.ALL )
+	@JsonManagedReference
+	private List<ReviewModel> reviews;
+	
 	public UserModel() {
 		this(-1L, "N/A","N/A", Role.ROLE_USER);
 	}
