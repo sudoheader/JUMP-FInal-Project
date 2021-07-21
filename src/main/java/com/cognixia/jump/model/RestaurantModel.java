@@ -19,7 +19,7 @@ public class RestaurantModel implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	public static enum Role{
+	public static enum Role{				// Unsure
 		ROLE_USER, ROLE_ADMIN
 	}
 	
