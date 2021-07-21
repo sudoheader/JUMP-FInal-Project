@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-public class RestaurantModel implements Serializable{
+public class Restaurant implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -27,7 +27,7 @@ public class RestaurantModel implements Serializable{
 	private String restaurantName;
 	
 	@NotNull
-	@Column(columnDefinition="varchar(max)")
+	@Column(columnDefinition="TEXT")
 	private String description;
 	
 	@Column(nullable = false, unique = true)
@@ -41,14 +41,14 @@ public class RestaurantModel implements Serializable{
 	
 	@OneToMany( mappedBy = "restaurant", cascade = CascadeType.ALL )
 	@JsonManagedReference
-	private List<ReviewModel> reviews;
+	private List<Review> reviews;
 	
-	public RestaurantModel() {
-		this(-1L, "N/A", "N/A", "N/A", 0000000000, 0.0, new ArrayList<ReviewModel>());
+	public Restaurant() {
+		this(-1L, "N/A", "N/A", "N/A", 0000000000, 0.0, new ArrayList<Review>());
 	}
 
-	public RestaurantModel(Long id, String restaurantName, String description, String address, int phoneNumber,
-			double rating, List<ReviewModel> reviews) {
+	public Restaurant(Long id, String restaurantName, String description, String address, int phoneNumber,
+			double rating, List<Review> reviews) {
 		super();
 		this.id = id;
 		this.restaurantName = restaurantName;
@@ -107,11 +107,11 @@ public class RestaurantModel implements Serializable{
 		this.rating = rating;
 	}
 
-	public List<ReviewModel> getReviews() {
+	public List<Review> getReviews() {
 		return reviews;
 	}
 
-	public void setReviews(List<ReviewModel> reviews) {
+	public void setReviews(List<Review> reviews) {
 		this.reviews = reviews;
 	}
 

@@ -2,8 +2,6 @@ package com.cognixia.jump.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,34 +12,34 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-public class ReviewModel {
+public class Review {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer reviewId;
 	
 	@ManyToOne
-	@JoinColumn(name="userId", referencedColumnName = "id")
+	@JoinColumn(name="user_id", referencedColumnName = "id")
 	@JsonBackReference
-	private UserModel user;
+	private User user;
 
 	@ManyToOne
-	@JoinColumn(name="restaurantId", referencedColumnName = "id")
+	@JoinColumn(name="restaurant_id", referencedColumnName = "id")
 	@JsonBackReference
-	private RestaurantModel restaurant;
+	private Restaurant restaurant;
 	
 	@NotNull
-	@Column(columnDefinition="varchar(max)")
+	@Column(columnDefinition="TEXT")
 	private String review;
 	
 	@Column(columnDefinition = "integer default 0")
 	private int rating;
 
-	public ReviewModel() {
+	public Review() {
 		
 	}
 	
-	public ReviewModel(Integer reviewId, UserModel user, RestaurantModel restaurant, @NotNull String review,
+	public Review(Integer reviewId, User user, Restaurant restaurant, @NotNull String review,
 			int rating) {
 		super();
 		this.reviewId = reviewId;
@@ -59,19 +57,19 @@ public class ReviewModel {
 		this.reviewId = reviewId;
 	}
 
-	public UserModel getUser() {
+	public User getUser() {
 		return user;
 	}
 
-	public void setUser(UserModel user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 
-	public RestaurantModel getRestaurant() {
+	public Restaurant getRestaurant() {
 		return restaurant;
 	}
 
-	public void setRestaurant(RestaurantModel restaurant) {
+	public void setRestaurant(Restaurant restaurant) {
 		this.restaurant = restaurant;
 	}
 
