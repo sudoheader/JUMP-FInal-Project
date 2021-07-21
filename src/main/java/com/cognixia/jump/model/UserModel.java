@@ -1,6 +1,7 @@
 package com.cognixia.jump.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -42,15 +43,16 @@ public class UserModel implements Serializable {
 	private List<ReviewModel> reviews;
 
 	public UserModel() {
-		this(-1L, "N/A", "N/A", Role.ROLE_USER);
+		this(-1L, "N/A", "N/A", Role.ROLE_USER, new ArrayList<ReviewModel>());
 	}
 
-	public UserModel(Long id, String username, String password, Role role) {
+	public UserModel(Long id, String username, String password, Role role, List<ReviewModel> reviews) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.role = role;
+		this.reviews = reviews;
 	}
 
 	public Long getId() {
@@ -85,12 +87,18 @@ public class UserModel implements Serializable {
 		this.role = role;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public List<ReviewModel> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<ReviewModel> reviews) {
+		this.reviews = reviews;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", role=" + role + "]";
+		return "UserModel [id=" + id + ", username=" + username + ", password=" + password + ", role=" + role
+				+ ", reviews=" + reviews + "]";
 	}
+	
 }
