@@ -1,4 +1,4 @@
-package com.cognixia.jump.springcloud;
+package com.cognixia.jump;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
