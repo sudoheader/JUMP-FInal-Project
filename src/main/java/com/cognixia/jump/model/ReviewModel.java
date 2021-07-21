@@ -18,47 +18,61 @@ public class ReviewModel {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer userId;
-	
-	@NotNull
-	@Column(columnDefinition = "integer default 0")
-	private int restrauntId;
-	
-	@NotNull
-	@Enumerated(EnumType.STRING)
-	private String review;
+	private Integer reviewId;
 	
 	@ManyToOne
-	@JoinColumn(name = "user_id", referencedColumnName = "id")
+	@JoinColumn(name="userId", referencedColumnName = "id")
 	@JsonBackReference
+	private UserModel user;
+
+	@ManyToOne
+	@JoinColumn(name="restaurantId", referencedColumnName = "id")
+	@JsonBackReference
+	private RestaurantModel restaurant;
+	
+	@NotNull
+	@Column(columnDefinition="varchar(max)")
+	private String review;
+	
+	@Column(columnDefinition = "integer default 0")
 	private int rating;
 
-	public ReviewModel(Integer userId, @NotNull int restrauntId, @NotNull String review, int rating) {
+	public ReviewModel() {
+		
+	}
+	
+	public ReviewModel(Integer reviewId, UserModel user, RestaurantModel restaurant, @NotNull String review,
+			int rating) {
 		super();
-		this.userId = userId;
-		this.restrauntId = restrauntId;
+		this.reviewId = reviewId;
+		this.user = user;
+		this.restaurant = restaurant;
 		this.review = review;
 		this.rating = rating;
 	}
-	
-	public ReviewModel() {
-		this(-1, -1, "", -1);
+
+	public Integer getReviewId() {
+		return reviewId;
 	}
 
-	public Integer getUserId() {
-		return userId;
+	public void setReviewId(Integer reviewId) {
+		this.reviewId = reviewId;
 	}
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public UserModel getUser() {
+		return user;
 	}
 
-	public int getRestrauntId() {
-		return restrauntId;
+	public void setUser(UserModel user) {
+		this.user = user;
 	}
 
-	public void setRestrauntId(int restrauntId) {
-		this.restrauntId = restrauntId;
+	public RestaurantModel getRestaurant() {
+		return restaurant;
+	}
+
+	public void setRestaurant(RestaurantModel restaurant) {
+		this.restaurant = restaurant;
 	}
 
 	public String getReview() {
@@ -79,12 +93,10 @@ public class ReviewModel {
 
 	@Override
 	public String toString() {
-		return "ReviewModel [userId=" + userId + ", restrauntId=" + restrauntId + ", review=" + review + ", rating="
-				+ rating + "]";
+		return "ReviewModel [reviewId=" + reviewId + ", user=" + user + ", restaurant=" + restaurant + ", review="
+				+ review + ", rating=" + rating + "]";
 	}
-
 	
 	
-
 }
 
