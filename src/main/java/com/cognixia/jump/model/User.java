@@ -17,7 +17,7 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-public class UserModel implements Serializable {
+public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static enum Role {
@@ -40,13 +40,13 @@ public class UserModel implements Serializable {
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonManagedReference
-	private List<ReviewModel> reviews;
+	private List<Review> reviews;
 
-	public UserModel() {
-		this(-1L, "N/A", "N/A", Role.ROLE_USER, new ArrayList<ReviewModel>());
+	public User() {
+		this(-1L, "N/A", "N/A", Role.ROLE_USER, new ArrayList<Review>());
 	}
 
-	public UserModel(Long id, String username, String password, Role role, List<ReviewModel> reviews) {
+	public User(Long id, String username, String password, Role role, List<Review> reviews) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -87,11 +87,11 @@ public class UserModel implements Serializable {
 		this.role = role;
 	}
 
-	public List<ReviewModel> getReviews() {
+	public List<Review> getReviews() {
 		return reviews;
 	}
 
-	public void setReviews(List<ReviewModel> reviews) {
+	public void setReviews(List<Review> reviews) {
 		this.reviews = reviews;
 	}
 
