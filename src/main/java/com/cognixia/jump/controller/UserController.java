@@ -19,6 +19,7 @@ import com.cognixia.jump.model.User;
 import com.cognixia.jump.repository.UserRepo;
 
 
+
 @RequestMapping("/api")
 @RestController
 public class UserController {
@@ -53,7 +54,7 @@ public class UserController {
 		
 		user.setId((long) -1);
 		
-		user.newReviews();			//Where I left off
+		user.newReview();			//Where I left off
 		
 		User newUser = userRepo.save(user);
 		
