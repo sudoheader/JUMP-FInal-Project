@@ -53,7 +53,7 @@ public class UserController {
 		
 		user.setId((long) -1);
 		
-		user.newReviews();
+		user.newReviews();			//Where I left off
 		
 		User newUser = userRepo.save(user);
 		
