@@ -91,6 +91,7 @@ public class Restaurant implements Serializable{
 		this.address = address;
 	}
 
+
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}

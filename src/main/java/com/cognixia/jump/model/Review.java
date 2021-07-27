@@ -81,6 +81,7 @@ public class Review {
 		this.review = review;
 	}
 
+
 	public double getRating() {
 		return rating;
 	}
