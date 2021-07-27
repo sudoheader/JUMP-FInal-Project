@@ -21,6 +21,8 @@ import com.cognixia.jump.model.Review;
 import com.cognixia.jump.model.User;
 import com.cognixia.jump.repository.RestaurantRepo;
 
+import io.swagger.annotations.ApiOperation;
+
 @RequestMapping("/api")
 @RestController
 public class RestaurantController {
@@ -29,6 +31,9 @@ public class RestaurantController {
 	RestaurantRepo restaurantRepo;
 
 	@GetMapping("/restaurants")
+	@ApiOperation(value = "Find all restaurants",
+	  notes = "Get all restaurant names",
+	  response = Restaurant.class)
 	public ResponseEntity<List<Restaurant>> getRestaurant() {
 		
 		return ResponseEntity.status(200)
@@ -36,6 +41,9 @@ public class RestaurantController {
 	}
 	
 	@GetMapping("/restaurants/{restaurant_id}")
+	@ApiOperation(value = "Find restaurant by its id",
+	  notes = "Return the restaurant",
+	  response = Restaurant.class)
 	public ResponseEntity<Restaurant> getRestrauntById(@Valid @PathVariable("restaurant_id") int restaurant_id) throws InvalidInputException {
 		
 		Optional<Restaurant> restaurantOpt = restaurantRepo.findById(restaurant_id);
@@ -50,7 +58,10 @@ public class RestaurantController {
 		}
 	}
 	
-	@DeleteMapping("/reviews/{todo_id}")
+	@DeleteMapping("/restaurants/{restaurant_id}")
+	@ApiOperation(value = "Delete a restaurant by id",
+	  notes = "Delete restaurant",
+	  response = User.class)
 	public ResponseEntity<Optional<Restaurant>> deleteTodoById(@Valid @PathVariable("restaurant_id") int restaurant_id) throws InvalidInputException {
 		
 	    Optional<Restaurant> restaurant = restaurantRepo.findById(restaurant_id);

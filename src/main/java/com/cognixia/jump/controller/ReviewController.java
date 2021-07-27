@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cognixia.jump.exception.InvalidInputException;
 import com.cognixia.jump.model.Review;
+import com.cognixia.jump.model.User;
 import com.cognixia.jump.repository.ReviewRepo;
+
+import io.swagger.annotations.ApiOperation;
 
 @RequestMapping("/api")
 @RestController
@@ -25,6 +28,9 @@ public class ReviewController {
 	ReviewRepo repo;
 
 	@GetMapping("/reviews")
+	@ApiOperation(value = "Find all reviews",
+	  notes = "Get all reviews",
+	  response = Review.class)
 	public ResponseEntity<List<Review>> getReviews() {
 		
 		return ResponseEntity.status(200)
@@ -32,6 +38,9 @@ public class ReviewController {
 	}
 	
 	@GetMapping("/reviews/{review_id}")
+	@ApiOperation(value = "Find all reviews by id",
+	  notes = "Get review by id",
+	  response = Review.class)
 	public ResponseEntity<Review> getReviewsById(@Valid @PathVariable("review_id") int review_id) throws InvalidInputException {
 		
 		Optional<Review> todoOpt = repo.findById(review_id);
@@ -47,7 +56,10 @@ public class ReviewController {
 		}
 	}
 	
-	@DeleteMapping("/reviews/{restaurant_id}")
+	@DeleteMapping("/reviews/{review_id}")
+	@ApiOperation(value = "Delete review by id",
+	  notes = "Remove review with id",
+	  response = Review.class)
 	public ResponseEntity<Optional<Review>> deleteTodoById(@Valid @PathVariable("review_id") int review_id) throws InvalidInputException {
 		
 	    Optional<Review> review = repo.findById(review_id);
