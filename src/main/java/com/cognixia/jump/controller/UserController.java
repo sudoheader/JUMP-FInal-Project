@@ -27,14 +27,15 @@ public class UserController {
 	UserRepo userRepo;
 	
 	@GetMapping("/users")
-	public ResponseEntity<List<User>> getUser() {
+	public ResponseEntity<?> getAllUsers() {
+		List<User> list = userRepo.findAll();
 		
 		return ResponseEntity.status(200)
-		 .body(userRepo.findAll());
+							 .body(list);
 	}
 	
 	@GetMapping("/users/{user_id}")
-	public ResponseEntity<User> getUsersById(@Valid @PathVariable("user_id") int user_id) throws InvalidInputException {
+	public ResponseEntity<?> getUsersById(@Valid @PathVariable("user_id") Long user_id) throws InvalidInputException {
 		
 		Optional<User> userOpt = userRepo.findById(user_id);
 		
@@ -49,16 +50,16 @@ public class UserController {
 	}	
 	
 	@PostMapping("/users")
-	public ResponseEntity<Optional<User>> addUser(@Valid @RequestBody User user) throws Exception {
+	public ResponseEntity<?> addUser(@Valid @RequestBody User user) throws Exception {
 		
-		user.setId((long) -1);
+		user.setId(-1L);
 		
 		//user.newReviews();			//Where I left off
 		
 		User newUser = userRepo.save(user);
 		
 		return ResponseEntity.status(201)
-							 .body(userRepo.findByUsername(user.getUsername()));
+							 .body(newUser);
 	}
 	
 	

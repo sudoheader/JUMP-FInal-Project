@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.cognixia.jump.model.User;
 
 @Repository
-public interface UserRepo extends JpaRepository<User, Integer> {
+public interface UserRepo extends JpaRepository<User, Long> {
 
 	Optional<User> findByUsername(String username);
 
