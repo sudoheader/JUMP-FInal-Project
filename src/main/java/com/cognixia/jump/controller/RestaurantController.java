@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiOperation;
 public class RestaurantController {
 	
 	@Autowired
-	RestaurantRepo restaurantRepo;
+	RestaurantRepo restaurantRepo;																// Repo
 
 	@GetMapping("/restaurants")
 	@ApiOperation(value = "Find all restaurants",
