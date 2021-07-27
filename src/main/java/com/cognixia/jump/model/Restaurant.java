@@ -34,9 +34,9 @@ public class Restaurant implements Serializable{
 	private String address;
 	
 	@Column(nullable = false, unique = true)
-	private int phoneNumber;
+	private String phoneNumber;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition="double default 0.0")
 	private double rating;
 	
 	@OneToMany( mappedBy = "restaurant", cascade = CascadeType.ALL )
@@ -44,10 +44,10 @@ public class Restaurant implements Serializable{
 	private List<Review> reviews;
 	
 	public Restaurant() {
-		this(-1L, "N/A", "N/A", "N/A", 0000000000, 0.0, new ArrayList<Review>());
+		this(-1L, "N/A", "N/A", "N/A", "0000000000", 0.0, new ArrayList<Review>());
 	}
 
-	public Restaurant(Long id, String restaurantName, String description, String address, int phoneNumber,
+	public Restaurant(Long id, String restaurantName, String description, String address, String phoneNumber,
 			double rating, List<Review> reviews) {
 		super();
 		this.id = id;
@@ -91,11 +91,12 @@ public class Restaurant implements Serializable{
 		this.address = address;
 	}
 
-	public int getPhoneNumber() {
+
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 
-	public void setPhoneNumber(int phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 

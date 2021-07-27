@@ -28,12 +28,12 @@ public class Review {
 	@JsonBackReference
 	private Restaurant restaurant;
 	
-	@NotNull
+
 	@Column(columnDefinition="TEXT")
 	private String review;
 	
-	@Column(columnDefinition = "integer default 0")
-	private int rating;
+	@Column(columnDefinition = "double default 0.0")
+	private double rating;
 
 	public Review() {
 		
@@ -81,11 +81,12 @@ public class Review {
 		this.review = review;
 	}
 
-	public int getRating() {
+
+	public double getRating() {
 		return rating;
 	}
 
-	public void setRating(int rating) {
+	public void setRating(double rating) {
 		this.rating = rating;
 	}
 
