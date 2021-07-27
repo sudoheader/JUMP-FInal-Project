@@ -18,6 +18,8 @@ import com.cognixia.jump.exception.InvalidInputException;
 import com.cognixia.jump.model.User;
 import com.cognixia.jump.repository.UserRepo;
 
+import io.swagger.annotations.ApiOperation;
+
 
 
 @RequestMapping("/api")
@@ -28,6 +30,9 @@ public class UserController {
 	UserRepo userRepo;
 	
 	@GetMapping("/users")
+	@ApiOperation(value = "Find all Users",
+	  notes = "Get all user names",
+	  response = User.class)
 	public ResponseEntity<?> getAllUsers() {
 		List<User> list = userRepo.findAll();
 		
@@ -36,6 +41,9 @@ public class UserController {
 	}
 	
 	@GetMapping("/users/{user_id}")
+	@ApiOperation(value = "Find users by id",
+	  notes = "Get the user with a specific id",
+	  response = User.class)
 	public ResponseEntity<?> getUsersById(@Valid @PathVariable("user_id") Long user_id) throws InvalidInputException {
 		
 		Optional<User> userOpt = userRepo.findById(user_id);
@@ -51,6 +59,9 @@ public class UserController {
 	}	
 	
 	@PostMapping("/users")
+	@ApiOperation(value = "Add a user",
+	  notes = "Initialize a new user",
+	  response = User.class)
 	public ResponseEntity<?> addUser(@Valid @RequestBody User user) throws Exception {
 		
 		user.setId(-1L);

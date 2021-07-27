@@ -47,7 +47,7 @@ public class ReviewController {
 		}
 	}
 	
-	@DeleteMapping("/reviews/{todo_id}")
+	@DeleteMapping("/reviews/{restaurant_id}")
 	public ResponseEntity<Optional<Review>> deleteTodoById(@Valid @PathVariable("review_id") int review_id) throws InvalidInputException {
 		
 	    Optional<Review> review = repo.findById(review_id);
