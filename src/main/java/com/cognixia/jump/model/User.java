@@ -102,7 +102,7 @@ public class User implements Serializable {
 	public void newReview() {
 		
 		for(int i = 0; i < userReviews.size(); i++) {
-			userReviews.get(i).setReviewId(-1);							// within ReviewModel
+			userReviews.get(i).setReviewId(-1L);							// within ReviewModel
 		}
 		
 	}

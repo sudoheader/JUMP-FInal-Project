@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cognixia.jump.exception.InvalidInputException;
+import com.cognixia.jump.exception.ResourceNotFoundException;
 import com.cognixia.jump.model.User;
 import com.cognixia.jump.repository.UserRepo;
-
 
 
 @RequestMapping("/api")
@@ -28,7 +29,7 @@ public class UserController {
 	UserRepo userRepo;
 	
 	@GetMapping("/users")
-	public ResponseEntity<?> getAllUsers() {
+	public ResponseEntity<List<User>> getAllUsers() {
 		List<User> list = userRepo.findAll();
 		
 		return ResponseEntity.status(200)
@@ -36,18 +37,15 @@ public class UserController {
 	}
 	
 	@GetMapping("/users/{user_id}")
-	public ResponseEntity<?> getUsersById(@Valid @PathVariable("user_id") Long user_id) throws InvalidInputException {
-		
-		Optional<User> userOpt = userRepo.findById(user_id);
-		
-		if (userOpt.isPresent()) {
-			return ResponseEntity.status(200)
-					 .body(userOpt.get());
+	public ResponseEntity<?> getUsersById(@Valid @PathVariable("user_id") Long user_id) throws ResourceNotFoundException {
+		if(!userRepo.existsById(user_id)) {
+			throw new ResourceNotFoundException("User with id " + user_id + " not found");
 		}
+	    User user = userRepo.findById(user_id).get();
+	    
+	    return ResponseEntity.status(HttpStatus.OK)
+	                        .body(user);
 		
-		else {
-			throw new InvalidInputException(user_id);
-		}
 	}	
 	
 	@PostMapping("/users")

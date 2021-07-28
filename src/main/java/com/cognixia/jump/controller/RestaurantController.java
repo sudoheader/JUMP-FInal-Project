@@ -50,7 +50,7 @@ public class RestaurantController {
 		}
 	}
 	
-	@DeleteMapping("/reviews/{todo_id}")
+	@DeleteMapping("/reviews/{restaurant_id}")
 	public ResponseEntity<Optional<Restaurant>> deleteTodoById(@Valid @PathVariable("restaurant_id") Long restaurant_id) throws InvalidInputException {
 		
 	    Optional<Restaurant> restaurant = restaurantRepo.findById(restaurant_id);
