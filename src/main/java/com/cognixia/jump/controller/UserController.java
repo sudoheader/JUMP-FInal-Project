@@ -32,15 +32,16 @@ public class UserController {
 	public ResponseEntity<List<User>> getAllUsers() {
 		List<User> list = userRepo.findAll();
 		
-		return ResponseEntity.status(200)
-							 .body(list);
+		return ResponseEntity.status(HttpStatus.OK)
+							 .body(userRepo.findAll());
 	}
 	
 	@GetMapping("/users/{user_id}")
-	public ResponseEntity<?> getUsersById(@Valid @PathVariable("user_id") Long user_id) throws ResourceNotFoundException {
+	public ResponseEntity<User> getUserById(@Valid @PathVariable("user_id") Long user_id) throws ResourceNotFoundException {
 		if(!userRepo.existsById(user_id)) {
 			throw new ResourceNotFoundException("User with id " + user_id + " not found");
 		}
+		
 	    User user = userRepo.findById(user_id).get();
 	    
 	    return ResponseEntity.status(HttpStatus.OK)
@@ -49,7 +50,7 @@ public class UserController {
 	}	
 	
 	@PostMapping("/users")
-	public ResponseEntity<?> addUser(@Valid @RequestBody User user) throws Exception {
+	public ResponseEntity<User> addUser(@Valid @RequestBody User user) throws InvalidInputException {
 		
 		user.setId(-1L);
 		
@@ -57,7 +58,7 @@ public class UserController {
 		
 		User newUser = userRepo.save(user);
 		
-		return ResponseEntity.status(201)
+		return ResponseEntity.status(HttpStatus.CREATED)
 							 .body(newUser);
 	}
 	

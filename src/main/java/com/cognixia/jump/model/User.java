@@ -34,10 +34,6 @@ public class User implements Serializable {
 	@Column(nullable = false)
 	private String password;
 	
-	@OneToMany( mappedBy = "user", cascade = CascadeType.ALL )
-	@JsonManagedReference
-	private List<Review> userReviews;
-	
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Role role;
@@ -101,8 +97,8 @@ public class User implements Serializable {
 	
 	public void newReview() {
 		
-		for(int i = 0; i < userReviews.size(); i++) {
-			userReviews.get(i).setReviewId(-1L);							// within ReviewModel
+		for(int i = 0; i < reviews.size(); i++) {
+			reviews.get(i).setReviewId(-1L);							// within ReviewModel
 		}
 		
 	}

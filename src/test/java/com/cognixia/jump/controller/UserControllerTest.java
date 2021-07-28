@@ -1,11 +1,11 @@
 package com.cognixia.jump.controller;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -14,8 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.validation.constraints.AssertTrue;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -30,7 +28,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.cognixia.jump.exception.InvalidInputException;
 import com.cognixia.jump.exception.ResourceNotFoundException;
 import com.cognixia.jump.model.Review;
 import com.cognixia.jump.model.User;
@@ -59,7 +56,7 @@ class UserControllerTest {
 	private UserController controller;
 	
 	@Test
-	void testGetAllUsers() throws Exception {
+	void testGetAllUsers_success() throws Exception {
 		
 		// set up
 		String uri = STARTING_URI + "users";
@@ -67,7 +64,9 @@ class UserControllerTest {
 		// mock data that will be returned when performing
 		// the get request
 		List<User> mockUsers = Arrays.asList(
-					new User(1l, "user123", "123", Role.ROLE_USER, new ArrayList<Review>())
+					new User(1l, "user123", "123", Role.ROLE_USER, new ArrayList<Review>()),
+					new User(2l, "user456", "456", Role.ROLE_USER, new ArrayList<Review>()),
+					new User(3l, "user789", "789", Role.ROLE_USER, new ArrayList<Review>())
 				);
 		
 		HttpHeaders header = new HttpHeaders();
@@ -95,6 +94,19 @@ class UserControllerTest {
 				.andExpect( jsonPath("$[0].password").value(users.getBody().get(0).getPassword()) )
 				.andExpect( jsonPath("$[0].role").value(users.getBody().get(0).getRole().toString()) )
 				.andExpect( jsonPath("$[0].reviews").value(users.getBody().get(0).getReviews()) )
+				
+				.andExpect( jsonPath("$[1].id").value(users.getBody().get(1).getId()) )
+				.andExpect( jsonPath("$[1].username").value(users.getBody().get(1).getUsername()) )
+				.andExpect( jsonPath("$[1].password").value(users.getBody().get(1).getPassword()) )
+				.andExpect( jsonPath("$[1].role").value(users.getBody().get(1).getRole().toString()) )
+				.andExpect( jsonPath("$[1].reviews").value(users.getBody().get(1).getReviews()) )
+				
+				.andExpect( jsonPath("$[2].id").value(users.getBody().get(2).getId()) )
+				.andExpect( jsonPath("$[2].username").value(users.getBody().get(2).getUsername()) )
+				.andExpect( jsonPath("$[2].password").value(users.getBody().get(2).getPassword()) )
+				.andExpect( jsonPath("$[2].role").value(users.getBody().get(2).getRole().toString()) )
+				.andExpect( jsonPath("$[2].reviews").value(users.getBody().get(2).getReviews()) )
+				
 				; 
 		
 		// verification of execution
@@ -102,7 +114,6 @@ class UserControllerTest {
 		verifyNoMoreInteractions(controller);
 		
 	}
-
 	
 	@Test
 	void testGetAllUsers_emptyResult() throws Exception {
@@ -133,18 +144,77 @@ class UserControllerTest {
 		
 	}
 	
+	@Test
+	void testGetUserById_success() throws Exception{
+		long id = 1;
+		String uri = STARTING_URI + "users/{user_id}";
+		
+		User mockUser = new User(1l, "user123", "123", Role.ROLE_USER, new ArrayList<Review>());
+		HttpHeaders header = new HttpHeaders();
+		header.setContentType(MediaType.APPLICATION_JSON);
+		
+		ResponseEntity<User> user = new ResponseEntity<>(
+					mockUser, 
+					header,
+					HttpStatus.OK
+				);
+		
+		when(controller.getUserById(id)).thenReturn(user);
+		
+		mockMvc.perform( get(uri, id) )
+		.andDo(print())
+		.andExpect( status().isOk() )
+		.andExpect( content().contentType(MediaType.APPLICATION_JSON_VALUE) )
+		.andExpect( jsonPath("$.id").value(user.getBody().getId()) )
+		.andExpect( jsonPath("$.username").value(user.getBody().getUsername()) )
+		.andExpect( jsonPath("$.password").value(user.getBody().getPassword()) )
+		.andExpect( jsonPath("$.role").value(user.getBody().getRole().toString()) )
+		.andExpect( jsonPath("$.reviews").value(user.getBody().getReviews()) )
+		;
+
+		verify(controller, times(1)).getUserById(id);
+		verifyNoMoreInteractions(controller);	
+		
+	}
 	
 	@Test
 	void testGetUserById_badId() throws Exception{
 		long id = -1;
 		String uri = STARTING_URI + "users/{user_id}";
-		when(controller.getUsersById(id)).thenThrow(new ResourceNotFoundException(""));
+		when(controller.getUserById(id)).thenThrow(new ResourceNotFoundException(""));
 		
 		mockMvc.perform(get(uri, id))
 		 .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof ResourceNotFoundException));
 		
 	}
 	
+	@Test
+	void testAddUser_success() throws Exception{
+		String uri = STARTING_URI + "users";
+		
+		User mockUser = new User(1l, "user123", "123", Role.ROLE_USER, new ArrayList<Review>());
+		
+		HttpHeaders header = new HttpHeaders();
+		header.setContentType(MediaType.APPLICATION_JSON);
+		
+		ResponseEntity<User> newUser = new ResponseEntity<>(
+					mockUser, 
+					header,
+					HttpStatus.OK
+				);
+		
+		//when(controller.addUser(mockUser)).thenReturn(newUser);
+		
+		mockMvc.perform( post(uri) )
+		.andDo(print())
+		.andExpect( status().isCreated() )
+		.andExpect( content().contentType(MediaType.APPLICATION_JSON_VALUE) )
+		;
+
+		verify(controller, times(1)).addUser(mockUser);
+		verifyNoMoreInteractions(controller);	
+		
+	}
 }
 
 
