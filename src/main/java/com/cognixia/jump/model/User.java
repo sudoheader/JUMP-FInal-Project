@@ -39,13 +39,15 @@ public class User implements Serializable {
 	private Role role;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	@JsonManagedReference
+	@JsonManagedReference(value = "firstParent")
 	private List<Review> reviews;
 
 	public User() {
 		this(-1L, "N/A", "N/A", Role.ROLE_USER, new ArrayList<Review>());
 	}
 
+	
+	
 	public User(Long id, String username, String password, Role role, List<Review> reviews) {
 		super();
 		this.id = id;
@@ -55,46 +57,68 @@ public class User implements Serializable {
 		this.reviews = reviews;
 	}
 
+
+
 	public Long getId() {
 		return id;
 	}
+
+
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
+
+
 	public String getUsername() {
 		return username;
 	}
+
+
 
 	public void setUsername(String username) {
 		this.username = username;
 	}
 
+
+
 	public String getPassword() {
 		return password;
 	}
+
+
 
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
+
+
 	public Role getRole() {
 		return role;
 	}
+
+
 
 	public void setRole(Role role) {
 		this.role = role;
 	}
 
+
+
 	public List<Review> getReviews() {
 		return reviews;
 	}
 
+
+
 	public void setReviews(List<Review> reviews) {
 		this.reviews = reviews;
 	}
-	
+
+
+
 	public void newReview() {
 		
 		for(int i = 0; i < reviews.size(); i++) {

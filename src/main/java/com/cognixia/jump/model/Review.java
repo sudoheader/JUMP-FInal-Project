@@ -22,12 +22,12 @@ public class Review {
 	
 	@ManyToOne
 	@JoinColumn(name="user_id", referencedColumnName = "id")
-	@JsonBackReference
+	@JsonBackReference(value = "firstParent")
 	private User user;
 
 	@ManyToOne
 	@JoinColumn(name="restaurant_id", referencedColumnName = "id")
-	@JsonBackReference
+	@JsonBackReference(value = "secondParent")
 	private Restaurant restaurant;
 	
 

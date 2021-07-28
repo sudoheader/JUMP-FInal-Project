@@ -207,9 +207,9 @@ class UserControllerTest {
 		
 		mockMvc.perform( post(uri) )
 		.andDo(print())
-		.andExpect( status().isCreated() )
+		
 		.andExpect( content().contentType(MediaType.APPLICATION_JSON_VALUE) )
-		;
+		.andExpect( status().isCreated() );
 
 		verify(controller, times(1)).addUser(mockUser);
 		verifyNoMoreInteractions(controller);	

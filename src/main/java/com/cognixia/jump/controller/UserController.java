@@ -50,7 +50,7 @@ public class UserController {
 	}	
 	
 	@PostMapping("/users")
-	public ResponseEntity<User> addUser(@Valid @RequestBody User user) throws InvalidInputException {
+	public ResponseEntity<User> addUser(@Valid @RequestBody User user) throws Exception {
 		
 		user.setId(-1L);
 		
