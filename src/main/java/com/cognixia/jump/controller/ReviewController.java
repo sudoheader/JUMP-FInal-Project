@@ -32,7 +32,7 @@ public class ReviewController {
 	}
 	
 	@GetMapping("/reviews/{review_id}")
-	public ResponseEntity<Review> getReviewsById(@Valid @PathVariable("review_id") int review_id) throws InvalidInputException {
+	public ResponseEntity<Review> getReviewsById(@Valid @PathVariable("review_id") Long review_id) throws InvalidInputException {
 		
 		Optional<Review> todoOpt = repo.findById(review_id);
 	
@@ -47,8 +47,9 @@ public class ReviewController {
 		}
 	}
 	
-	@DeleteMapping("/reviews/{restaurant_id}")
-	public ResponseEntity<Optional<Review>> deleteTodoById(@Valid @PathVariable("review_id") int review_id) throws InvalidInputException {
+	@DeleteMapping("/reviews/{review_id}")
+	public ResponseEntity<Optional<Review>> deleteTodoById(@Valid @PathVariable("review_id") Long review_id) throws InvalidInputException {
+
 		
 	    Optional<Review> review = repo.findById(review_id);
 	    
