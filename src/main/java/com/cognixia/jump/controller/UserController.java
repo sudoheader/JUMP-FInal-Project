@@ -20,6 +20,8 @@ import com.cognixia.jump.exception.ResourceNotFoundException;
 import com.cognixia.jump.model.User;
 import com.cognixia.jump.repository.UserRepo;
 
+import io.swagger.annotations.ApiOperation;
+
 
 @RequestMapping("/api")
 @RestController
@@ -29,7 +31,11 @@ public class UserController {
 	UserRepo userRepo;
 	
 	@GetMapping("/users")
+  @ApiOperation(value = "Find all Users",
+	  notes = "Get all user names",
+	  response = User.class)
 	public ResponseEntity<List<User>> getAllUsers() {
+
 		List<User> list = userRepo.findAll();
 		
 		return ResponseEntity.status(HttpStatus.OK)
@@ -37,10 +43,12 @@ public class UserController {
 	}
 	
 	@GetMapping("/users/{user_id}")
+  @ApiOperation(value = "Find users by id",
+	  notes = "Get the user with a specific id",
+	  response = User.class)
 	public ResponseEntity<User> getUserById(@Valid @PathVariable("user_id") Long user_id) throws ResourceNotFoundException {
 		if(!userRepo.existsById(user_id)) {
 			throw new ResourceNotFoundException("User with id " + user_id + " not found");
-		}
 		
 	    User user = userRepo.findById(user_id).get();
 	    
@@ -50,6 +58,10 @@ public class UserController {
 	}	
 	
 	@PostMapping("/users")
+   @ApiOperation(value = "Add a user",
+	  notes = "Initialize a new user",
+	  response = User.class)
+
 	public ResponseEntity<User> addUser(@Valid @RequestBody User user) throws Exception {
 		
 		user.setId(-1L);
