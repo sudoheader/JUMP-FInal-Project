@@ -1,5 +1,7 @@
 package com.cognixia.jump.controller;
 
+import static org.hamcrest.CoreMatchers.any;
+import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -15,9 +17,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.print.attribute.standard.Media;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -27,6 +33,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.cognixia.jump.exception.ResourceNotFoundException;
 import com.cognixia.jump.model.Review;
@@ -191,29 +199,38 @@ class UserControllerTest {
 	@Test
 	void testAddUser_success() throws Exception{
 		String uri = STARTING_URI + "users";
+		String json = 
+				"{\n"
+				+ " \"id\": -1,\n"
+				+ " \"username\": \"usernametest\",\n"
+				+ " \"password\": \"passwordtest\",\n"
+				+ " \"role\": \"ROLE_USER\",\n"
+				+ " \"reviews\": []\n"
+				+ "}";
 		
-		User mockUser = new User(1l, "user123", "123", Role.ROLE_USER, new ArrayList<Review>());
-		
+		User mockUser = new User(1l, "usernametest", "passwordtest", Role.ROLE_USER, new ArrayList<Review>());
 		HttpHeaders header = new HttpHeaders();
 		header.setContentType(MediaType.APPLICATION_JSON);
 		
-		ResponseEntity<User> newUser = new ResponseEntity<>(
+		ResponseEntity<User> user = new ResponseEntity<>(
 					mockUser, 
 					header,
-					HttpStatus.OK
+					HttpStatus.CREATED
 				);
 		
-		//when(controller.addUser(mockUser)).thenReturn(newUser);
+		when(controller.addUser(Mockito.any(User.class))).thenReturn(user);
 		
-		mockMvc.perform( post(uri) )
-		.andDo(print())
-		
-		.andExpect( content().contentType(MediaType.APPLICATION_JSON_VALUE) )
-		.andExpect( status().isCreated() );
-
-		verify(controller, times(1)).addUser(mockUser);
-		verifyNoMoreInteractions(controller);	
-		
+		mockMvc.perform(post(uri)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+			.andDo(print())
+			.andExpect(status().isCreated())
+			.andExpect( jsonPath("$.id").value(user.getBody().getId()) )
+			.andExpect( jsonPath("$.username").value(user.getBody().getUsername()) )
+			.andExpect( jsonPath("$.password").value(user.getBody().getPassword()) )
+			.andExpect( jsonPath("$.role").value(user.getBody().getRole().toString()) )
+			.andExpect( jsonPath("$.reviews").value(user.getBody().getReviews()) )
+		;
 	}
 }
 
