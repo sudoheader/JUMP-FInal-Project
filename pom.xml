@@ -12,7 +12,8 @@
 	<artifactId>jump-Final-Project</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>jump-Final-Project</name>
-	<description>Restraunt review site</description>
+	<description>Restaurant review site</description>
+	<packaging>jar</packaging>
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
