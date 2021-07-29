@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cognixia.jump.exception.InvalidInputException;
@@ -38,7 +39,7 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(userRepo.findAll());
 	}
 
-	@GetMapping("/users/{user_id")
+	@GetMapping("/users/{user_id}")
 	@ApiOperation(value = "Find users by id",
 	  notes = "Get the user with a specific id",
 	  response = User.class)
@@ -55,7 +56,7 @@ public class UserController {
 
 	@PostMapping("/users")
 	@ApiOperation(value = "Add a user", notes = "Initialize a new user", response = User.class)
-
+	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<User> addUser(@Valid @RequestBody User user) throws Exception {
 
 		user.setId(-1L);
