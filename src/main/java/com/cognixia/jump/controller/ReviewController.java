@@ -36,7 +36,7 @@ import io.swagger.annotations.ApiOperation;
 public class ReviewController {
 	
 	@Autowired
-  ReviewRepo reviewRepo;
+	ReviewRepo reviewRepo;
 	
 	@Autowired
 	UserRepo userRepo;
@@ -46,22 +46,17 @@ public class ReviewController {
 	
 	@Autowired
 	RestaurantController restaurantController;
-  
-  @GetMapping("/reviews")
-	@ApiOperation(value = "Find all reviews",
-	  notes = "Get all reviews",
-	  response = Review.class)
-	public ResponseEntity<List<Review>> getReviews() {
-		
-		return ResponseEntity.status(HttpStatus.200)
-				 .body(repo.findAll());
-	}
 	
 	//@GetMapping("/reviews/{review_id}")
 	//public ResponseEntity<Review> getReviewsById(@Valid @PathVariable("review_id") Long review_id) throws InvalidInputException {
-
-		
-		//Optional<Review> todoOpt = repo.findById(review_id);
+	//Optional<Review> todoOpt = repo.findById(review_id);
+	
+	@GetMapping("/reviews")
+	@ApiOperation(value = "Find all reviews", notes = "Get all reviews", response = Review.class)
+	public ResponseEntity<List<Review>> getReviews() {
+		return ResponseEntity.status(HttpStatus.OK)
+				 .body(reviewRepo.findAll());
+	}
 
 	@GetMapping("/user/{userId}/reviews")
 	public ResponseEntity<List<Review>> getUserReviews(@PathVariable long userId) throws ResourceNotFoundException{

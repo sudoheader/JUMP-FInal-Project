@@ -51,15 +51,15 @@ public class RestaurantController {
 	@ApiOperation(value = "Find all restaurants",
 	  notes = "Get all restaurant names",
 	  response = Restaurant.class)
-	public ResponseEntity<List<Restaurant>> getRestaurant() {
-		
-		return ResponseEntity.status(HttpStatus.OK)
-				 .body(restaurantRepo.findAll());
+	public ResponseEntity<List<Restaurant>> getAllRestaurants() {
+		List<Restaurant> list = restaurantRepo.findAll();
+
+		return ResponseEntity.status(HttpStatus.OK).body(list);
 	}
 	
 	//READ
 	@GetMapping("/restaurants/id/{restaurant_id}")
-  @ApiOperation(value = "Find restaurant by its id",
+	@ApiOperation(value = "Find restaurant by its id",
 	  notes = "Return the restaurant",
 	  response = Restaurant.class)
 	public ResponseEntity<Restaurant> getRestaurantById(@Valid @PathVariable("restaurant_id") Long restaurant_id) throws ResourceNotFoundException {
