@@ -10,14 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cognixia.jump.exception.InvalidInputException;
 import com.cognixia.jump.model.Restaurant;
-import com.cognixia.jump.model.Review;
 import com.cognixia.jump.model.User;
 import com.cognixia.jump.repository.RestaurantRepo;
 
@@ -28,7 +25,7 @@ import io.swagger.annotations.ApiOperation;
 public class RestaurantController {
 	
 	@Autowired
-	RestaurantRepo restaurantRepo;																// Repo
+	RestaurantRepo restaurantRepo;																
 
 	@GetMapping("/restaurants")
 	@ApiOperation(value = "Find all restaurants",

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cognixia.jump.exception.InvalidInputException;
 import com.cognixia.jump.model.Review;
-import com.cognixia.jump.model.User;
 import com.cognixia.jump.repository.ReviewRepo;
 
 import io.swagger.annotations.ApiOperation;
