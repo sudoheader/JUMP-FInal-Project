@@ -30,15 +30,17 @@ public class UserController {
 	@Autowired
 	UserRepo userRepo;
 
+	//READ
 	@GetMapping("/users")
 	@ApiOperation(value = "Find all Users", notes = "Get all user names", response = User.class)
 	public ResponseEntity<List<User>> getAllUsers() {
 
 		List<User> list = userRepo.findAll();
 
-		return ResponseEntity.status(HttpStatus.OK).body(userRepo.findAll());
+		return ResponseEntity.status(HttpStatus.OK).body(list);
 	}
-
+	
+	//READ
 	@GetMapping("/users/{user_id}")
 	@ApiOperation(value = "Find users by id",
 	  notes = "Get the user with a specific id",
@@ -53,7 +55,8 @@ public class UserController {
 	    return ResponseEntity.status(HttpStatus.OK)
 	                        .body(user);
 	}
-
+	
+	//CREATE
 	@PostMapping("/users")
 	@ApiOperation(value = "Add a user", notes = "Initialize a new user", response = User.class)
 	@ResponseStatus(HttpStatus.CREATED)
