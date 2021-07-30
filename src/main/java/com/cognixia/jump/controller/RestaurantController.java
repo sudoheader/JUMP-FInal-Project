@@ -36,14 +36,13 @@ public class RestaurantController {
 
 	//CREATE
 	@PostMapping("/restaurants")
-	public void addUser(@Valid @RequestBody Restaurant restaurant) throws Exception {
-
+	public ResponseEntity<Restaurant> addRestaurant(@Valid @RequestBody Restaurant restaurant) throws Exception {
 		restaurant.setId(-1L);
-
-		Restaurant added = restaurantRepo.save(restaurant);
-
-		System.out.println("Added: " + added);
 		
+		Restaurant added = restaurantRepo.save(restaurant);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+		 .body(added);
 	}
 	
 	//READ
@@ -88,20 +87,19 @@ public class RestaurantController {
 	//UPDATE
 	@PutMapping("/update/restaurants")
 	@ApiOperation(value = "Update a restaurant",
-			notes = "Restraunt to be updated",
+			notes = "Restaurant to be updated",
 			response = Restaurant.class)
-	public @ResponseBody String updateRestaurant(@RequestBody Restaurant updateRestaurant) {
+	public  ResponseEntity<Restaurant> updateRestaurant(@Valid @RequestBody Restaurant restaurant) throws ResourceNotFoundException {
 		
-		// check if student exists, then update them
-		
-		Optional<Restaurant> found = restaurantRepo.findById(updateRestaurant.getId());
+		Optional<Restaurant> found = restaurantRepo.findById(restaurant.getId());
 		
 		if(found.isPresent()) {
-			restaurantRepo.save(updateRestaurant);
-			return "Saved: " + updateRestaurant.toString();
+			Restaurant updated = restaurantRepo.save(restaurant);
+			return ResponseEntity.status(HttpStatus.OK)
+					 .body(updated);
 		}
 		else {
-			return "Could not update student, the id = " + updateRestaurant.getId() + " doesn't exist";
+			throw new ResourceNotFoundException("Restaurant with id " + restaurant.getId() + " not found");
 		}
 		
 	}
@@ -111,19 +109,18 @@ public class RestaurantController {
 	@ApiOperation(value = "Delete a restaurant by id",
 	  notes = "Delete restaurant",
 	  response = User.class)
-	public ResponseEntity<Optional<Restaurant>> deleteTodoById(@Valid @PathVariable("restaurant_id") Long restaurant_id) throws InvalidInputException {
+	public ResponseEntity<Restaurant> deleteTodoById(@Valid @PathVariable Long restaurant_id) throws ResourceNotFoundException {
 		
 	    Optional<Restaurant> restaurant = restaurantRepo.findById(restaurant_id);
 	    
-	    restaurantRepo.deleteById(restaurant_id);
-	    
-	    if (restaurant.isPresent()) {
-	    	return ResponseEntity.status(200)
-					 .body(restaurant);
+	    if (restaurant.isPresent()) {  
+	    	restaurantRepo.deleteById(restaurant_id);
+	    	return ResponseEntity.status(HttpStatus.OK)
+					 .body(restaurant.get());
 	    }
 
 		else {
-			throw new InvalidInputException(restaurant_id);
+			throw new ResourceNotFoundException("Restaurant with id " + restaurant_id + " not found");
 		}
 
 	}
