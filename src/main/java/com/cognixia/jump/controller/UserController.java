@@ -36,7 +36,7 @@ public class UserController {
 
 		List<User> list = userRepo.findAll();
 
-		return ResponseEntity.status(HttpStatus.OK).body(userRepo.findAll());
+		return ResponseEntity.status(HttpStatus.OK).body(list);
 	}
 
 	@GetMapping("/users/{user_id}")
