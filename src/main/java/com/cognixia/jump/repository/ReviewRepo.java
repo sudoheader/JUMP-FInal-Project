@@ -12,10 +12,10 @@ import org.springframework.data.repository.query.Param;
 
 import com.cognixia.jump.model.Review;
 
-public interface ReviewRepo extends JpaRepository<Review, Integer>{
+public interface ReviewRepo extends JpaRepository<Review, Long>{
 	@Transactional
 	@Modifying
 	@Query("delete from Review t where t.id=:id")
-	int deleteReview(@Param("id") int id);
+	int deleteReview(@Param("id") Long id);
 }
 

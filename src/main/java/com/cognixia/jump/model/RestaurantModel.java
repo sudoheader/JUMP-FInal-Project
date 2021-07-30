@@ -1,23 +1,27 @@
 package com.cognixia.jump.model;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-public class Restaurant implements Serializable{
+public class RestaurantModel implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
+	
+	public static enum Role{				// Unsure
+		ROLE_USER, ROLE_ADMIN
+	}
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,37 +30,35 @@ public class Restaurant implements Serializable{
 	@Column(unique = true)
 	private String restaurantName;
 	
-	@NotNull
-	@Column(columnDefinition="TEXT")
-	private String description;
+	@Column( nullable = false )
+	private String Description;
 	
 	@Column(nullable = false, unique = true)
 	private String address;
 	
 	@Column(nullable = false, unique = true)
-	private String phoneNumber;
+	private int number;
 	
-	@Column(nullable = false, columnDefinition="double default 0.0")
+	@Column(nullable = false)
 	private double rating;
 	
 	@OneToMany( mappedBy = "restaurant", cascade = CascadeType.ALL )
-	@JsonManagedReference(value = "secondParent")
-	private List<Review> reviews;
+	@JsonManagedReference
+	private List<ReviewModel> reviews;
 	
-	public Restaurant() {
-		this(-1L, "N/A", "N/A", "N/A", "0000000000", 0.0, new ArrayList<Review>());
+	public RestaurantModel() {
+		this(-1L, "N/A", "N/A", "N/A", 0000000000, 0.0);
 	}
-
-	public Restaurant(Long id, String restaurantName, String description, String address, String phoneNumber,
-			double rating, List<Review> reviews) {
+	
+	public RestaurantModel(Long id, String restaurantName, String description, String address, int number,
+			double rating) {
 		super();
 		this.id = id;
 		this.restaurantName = restaurantName;
-		this.description = description;
+		Description = description;
 		this.address = address;
-		this.phoneNumber = phoneNumber;
+		this.number = number;
 		this.rating = rating;
-		this.reviews = reviews;
 	}
 
 	public Long getId() {
@@ -76,11 +78,11 @@ public class Restaurant implements Serializable{
 	}
 
 	public String getDescription() {
-		return description;
+		return Description;
 	}
 
 	public void setDescription(String description) {
-		this.description = description;
+		Description = description;
 	}
 
 	public String getAddress() {
@@ -91,13 +93,12 @@ public class Restaurant implements Serializable{
 		this.address = address;
 	}
 
-
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public int getNumber() {
+		return number;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setNumber(int number) {
+		this.number = number;
 	}
 
 	public double getRating() {
@@ -107,20 +108,16 @@ public class Restaurant implements Serializable{
 	public void setRating(double rating) {
 		this.rating = rating;
 	}
-
-	public List<Review> getReviews() {
-		return reviews;
-	}
-
-	public void setReviews(List<Review> reviews) {
-		this.reviews = reviews;
+	
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	@Override
 	public String toString() {
-		return "RestaurantModel [id=" + id + ", restaurantName=" + restaurantName + ", description=" + description
-				+ ", address=" + address + ", phoneNumber=" + phoneNumber + ", rating=" + rating + ", reviews="
-				+ reviews + "]";
+		return "RestaurantModel [id=" + id + ", restaurantName=" + restaurantName + ", Description=" + Description
+				+ ", address=" + address + ", number=" + number + ", rating=" + rating + "]";
 	}
+	
 	
 }

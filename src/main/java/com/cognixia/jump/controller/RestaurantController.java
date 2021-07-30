@@ -38,10 +38,14 @@ public class RestaurantController {
 	}
 	
 	@GetMapping("/restaurants/{restaurant_id}")
+<<<<<<< HEAD
 	@ApiOperation(value = "Find restaurant by its id",
 	  notes = "Return the restaurant",
 	  response = Restaurant.class)
 	public ResponseEntity<Restaurant> getRestrauntById(@Valid @PathVariable("restaurant_id") int restaurant_id) throws InvalidInputException {
+=======
+	public ResponseEntity<Restaurant> getRestrauntById(@Valid @PathVariable("restaurant_id") Long restaurant_id) throws InvalidInputException {
+>>>>>>> main
 		
 		Optional<Restaurant> restaurantOpt = restaurantRepo.findById(restaurant_id);
 		
@@ -55,11 +59,16 @@ public class RestaurantController {
 		}
 	}
 	
+<<<<<<< HEAD
 	@DeleteMapping("/restaurants/{restaurant_id}")
 	@ApiOperation(value = "Delete a restaurant by id",
 	  notes = "Delete restaurant",
 	  response = User.class)
 	public ResponseEntity<Optional<Restaurant>> deleteTodoById(@Valid @PathVariable("restaurant_id") int restaurant_id) throws InvalidInputException {
+=======
+	@DeleteMapping("/reviews/{restaurant_id}")
+	public ResponseEntity<Optional<Restaurant>> deleteTodoById(@Valid @PathVariable("restaurant_id") Long restaurant_id) throws InvalidInputException {
+>>>>>>> main
 		
 	    Optional<Restaurant> restaurant = restaurantRepo.findById(restaurant_id);
 	    

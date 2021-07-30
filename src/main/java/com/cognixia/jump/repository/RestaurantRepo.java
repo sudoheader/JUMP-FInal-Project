@@ -12,9 +12,9 @@ import org.springframework.data.repository.query.Param;
 
 import com.cognixia.jump.model.Restaurant;
 
-public interface RestaurantRepo extends JpaRepository<Restaurant, Integer>{
+public interface RestaurantRepo extends JpaRepository<Restaurant, Long>{
 	@Transactional
 	@Modifying
 	@Query("delete from Review t where t.id=:id")
-	int deleteRestaurant(@Param("id") int id);
+	int deleteRestaurant(@Param("id") Long id);
 }
