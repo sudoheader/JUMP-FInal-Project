@@ -1,5 +1,7 @@
 package com.cognixia.jump.model;
 
+import java.sql.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,44 +18,47 @@ public class Review {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer reviewId;
+	private Long reviewId;
 	
 	@ManyToOne
 	@JoinColumn(name="user_id", referencedColumnName = "id")
-	@JsonBackReference
+	@JsonBackReference(value = "firstParent")
 	private User user;
 
 	@ManyToOne
 	@JoinColumn(name="restaurant_id", referencedColumnName = "id")
-	@JsonBackReference
+	@JsonBackReference(value = "secondParent")
 	private Restaurant restaurant;
 	
-	@NotNull
+
 	@Column(columnDefinition="TEXT")
 	private String review;
 	
-	@Column(columnDefinition = "integer default 0")
-	private int rating;
+	@Column(columnDefinition = "double default 0.0")
+	private double rating;
+	
+	@NotNull
+	private Date date;
 
 	public Review() {
-		
+		this(-1L, new User(), new Restaurant(), "", 0.0, new Date(System.currentTimeMillis()));
 	}
-	
-	public Review(Integer reviewId, User user, Restaurant restaurant, @NotNull String review,
-			int rating) {
+
+	public Review(Long reviewId, User user, Restaurant restaurant, String review, double rating, Date date) {
 		super();
 		this.reviewId = reviewId;
 		this.user = user;
 		this.restaurant = restaurant;
 		this.review = review;
 		this.rating = rating;
+		this.date = date;
 	}
 
-	public Integer getReviewId() {
+	public Long getReviewId() {
 		return reviewId;
 	}
 
-	public void setReviewId(Integer reviewId) {
+	public void setReviewId(Long reviewId) {
 		this.reviewId = reviewId;
 	}
 
@@ -81,20 +86,27 @@ public class Review {
 		this.review = review;
 	}
 
-	public int getRating() {
+	public double getRating() {
 		return rating;
 	}
 
-	public void setRating(int rating) {
+	public void setRating(double rating) {
 		this.rating = rating;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	@Override
 	public String toString() {
-		return "ReviewModel [reviewId=" + reviewId + ", user=" + user + ", restaurant=" + restaurant + ", review="
-				+ review + ", rating=" + rating + "]";
+		return "Review [reviewId=" + reviewId + ", user=" + user + ", restaurant=" + restaurant + ", review=" + review
+				+ ", rating=" + rating + ", date=" + date + "]";
 	}
-	
 	
 }
 
