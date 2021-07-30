@@ -15,7 +15,7 @@ import com.cognixia.jump.model.Review;
 public interface ReviewRepo extends JpaRepository<Review, Long>{
 	@Transactional
 	@Modifying
-	@Query("delete from Review t where t.id=:id")
+	@Query("delete from Review r where r.id=:id")
 	int deleteReview(@Param("id") Long id);
 }
 

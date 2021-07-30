@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cognixia.jump.exception.InvalidInputException;
+import com.cognixia.jump.exception.ResourceNotFoundException;
 import com.cognixia.jump.model.Restaurant;
 
 import com.cognixia.jump.model.User;
@@ -52,27 +53,36 @@ public class RestaurantController {
 	  response = Restaurant.class)
 	public ResponseEntity<List<Restaurant>> getRestaurant() {
 		
-		return ResponseEntity.status(200)
+		return ResponseEntity.status(HttpStatus.OK)
 				 .body(restaurantRepo.findAll());
 	}
 	
 	//READ
-	@GetMapping("/restaurants/{restaurant_id}")
-	@ApiOperation(value = "Find restaurant by its id",
+	@GetMapping("/restaurants/id/{restaurant_id}")
+  @ApiOperation(value = "Find restaurant by its id",
 	  notes = "Return the restaurant",
 	  response = Restaurant.class)
-	public ResponseEntity<Restaurant> getRestrauntById(@Valid @PathVariable("restaurant_id") Long restaurant_id) throws InvalidInputException {
-		
-		Optional<Restaurant> restaurantOpt = restaurantRepo.findById(restaurant_id);
-		
-		if (restaurantOpt.isPresent()) {
-			return ResponseEntity.status(200)
-					 .body(restaurantOpt.get());
+	public ResponseEntity<Restaurant> getRestaurantById(@Valid @PathVariable("restaurant_id") Long restaurant_id) throws ResourceNotFoundException {
+		if(!restaurantRepo.existsById(restaurant_id)) {
+			throw new ResourceNotFoundException("Restaurant with id " + restaurant_id + " not found");
 		}
 		
-		else {
-			throw new InvalidInputException(restaurant_id);
+	    Restaurant restaurant = restaurantRepo.findById(restaurant_id).get();
+	    
+	    return ResponseEntity.status(HttpStatus.OK)
+	                        .body(restaurant);
+	}
+	
+	@GetMapping("/restaurants/name/{name}")
+	public ResponseEntity<Restaurant> getRestaurantByName(@Valid @PathVariable("name") String name) throws ResourceNotFoundException {
+		if(!restaurantRepo.existsByRestaurantName(name)) {
+			throw new ResourceNotFoundException("Restaurant with name " + name + " not found");
 		}
+		
+	    Restaurant restaurant = restaurantRepo.findByRestaurantName(name).get();
+	    
+	    return ResponseEntity.status(HttpStatus.OK)
+	                        .body(restaurant);
 	}
 	
 	//UPDATE
