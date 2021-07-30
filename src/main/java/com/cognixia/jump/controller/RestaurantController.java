@@ -6,15 +6,21 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cognixia.jump.exception.InvalidInputException;
 import com.cognixia.jump.model.Restaurant;
+
 import com.cognixia.jump.model.User;
 import com.cognixia.jump.repository.RestaurantRepo;
 
@@ -27,6 +33,19 @@ public class RestaurantController {
 	@Autowired
 	RestaurantRepo restaurantRepo;																
 
+	//CREATE
+	@PostMapping("/restaurants")
+	public void addUser(@Valid @RequestBody Restaurant restaurant) throws Exception {
+
+		restaurant.setId(-1L);
+
+		Restaurant added = restaurantRepo.save(restaurant);
+
+		System.out.println("Added: " + added);
+		
+	}
+	
+	//READ
 	@GetMapping("/restaurants")
 	@ApiOperation(value = "Find all restaurants",
 	  notes = "Get all restaurant names",
@@ -37,15 +56,12 @@ public class RestaurantController {
 				 .body(restaurantRepo.findAll());
 	}
 	
+	//READ
 	@GetMapping("/restaurants/{restaurant_id}")
-<<<<<<< HEAD
 	@ApiOperation(value = "Find restaurant by its id",
 	  notes = "Return the restaurant",
 	  response = Restaurant.class)
-	public ResponseEntity<Restaurant> getRestrauntById(@Valid @PathVariable("restaurant_id") int restaurant_id) throws InvalidInputException {
-=======
 	public ResponseEntity<Restaurant> getRestrauntById(@Valid @PathVariable("restaurant_id") Long restaurant_id) throws InvalidInputException {
->>>>>>> main
 		
 		Optional<Restaurant> restaurantOpt = restaurantRepo.findById(restaurant_id);
 		
@@ -59,16 +75,33 @@ public class RestaurantController {
 		}
 	}
 	
-<<<<<<< HEAD
+	//UPDATE
+	@PutMapping("/update/restaurants")
+	@ApiOperation(value = "Update a restaurant",
+			notes = "Restraunt to be updated",
+			response = Restaurant.class)
+	public @ResponseBody String updateRestaurant(@RequestBody Restaurant updateRestaurant) {
+		
+		// check if student exists, then update them
+		
+		Optional<Restaurant> found = restaurantRepo.findById(updateRestaurant.getId());
+		
+		if(found.isPresent()) {
+			restaurantRepo.save(updateRestaurant);
+			return "Saved: " + updateRestaurant.toString();
+		}
+		else {
+			return "Could not update student, the id = " + updateRestaurant.getId() + " doesn't exist";
+		}
+		
+	}
+	
+	//DELETE
 	@DeleteMapping("/restaurants/{restaurant_id}")
 	@ApiOperation(value = "Delete a restaurant by id",
 	  notes = "Delete restaurant",
 	  response = User.class)
-	public ResponseEntity<Optional<Restaurant>> deleteTodoById(@Valid @PathVariable("restaurant_id") int restaurant_id) throws InvalidInputException {
-=======
-	@DeleteMapping("/reviews/{restaurant_id}")
 	public ResponseEntity<Optional<Restaurant>> deleteTodoById(@Valid @PathVariable("restaurant_id") Long restaurant_id) throws InvalidInputException {
->>>>>>> main
 		
 	    Optional<Restaurant> restaurant = restaurantRepo.findById(restaurant_id);
 	    
@@ -84,4 +117,6 @@ public class RestaurantController {
 		}
 
 	}
+	
+	
 }

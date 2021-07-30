@@ -8,19 +8,12 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-<<<<<<< HEAD
-import org.springframework.web.bind.annotation.ResponseBody;
-=======
 import org.springframework.web.bind.annotation.ResponseStatus;
->>>>>>> main
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cognixia.jump.exception.InvalidInputException;
@@ -33,38 +26,22 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/api")
 @RestController
 public class UserController {
-<<<<<<< HEAD
-								
-	@Autowired
-	UserRepo userRepo;
-	
-	@GetMapping("/users")					
-	@ApiOperation(value = "Find all Users",
-	  notes = "Get all user names",
-	  response = User.class)
-	public ResponseEntity<?> getAllUsers() {
-=======
 
 	@Autowired
 	UserRepo userRepo;
 
+	//READ
 	@GetMapping("/users")
 	@ApiOperation(value = "Find all Users", notes = "Get all user names", response = User.class)
 	public ResponseEntity<List<User>> getAllUsers() {
 
->>>>>>> main
 		List<User> list = userRepo.findAll();
 
 		return ResponseEntity.status(HttpStatus.OK).body(userRepo.findAll());
 	}
-<<<<<<< HEAD
 	
-	//Read
-	@GetMapping("/users/{user_id}")			
-=======
-
+	//READ
 	@GetMapping("/users/{user_id}")
->>>>>>> main
 	@ApiOperation(value = "Find users by id",
 	  notes = "Get the user with a specific id",
 	  response = User.class)
@@ -73,21 +50,13 @@ public class UserController {
 			throw new ResourceNotFoundException("User with id " + user_id + " not found");
 		}
 		
-<<<<<<< HEAD
-		else {
-			throw new InvalidInputException(user_id);
-		}
-	}	
-	
-	//Create
-=======
 	    User user = userRepo.findById(user_id).get();
 	    
 	    return ResponseEntity.status(HttpStatus.OK)
 	                        .body(user);
 	}
-
->>>>>>> main
+	
+	//CREATE
 	@PostMapping("/users")
 	@ApiOperation(value = "Add a user", notes = "Initialize a new user", response = User.class)
 	@ResponseStatus(HttpStatus.CREATED)
@@ -101,50 +70,5 @@ public class UserController {
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
 	}
-<<<<<<< HEAD
-	
-	//Update
-	@CrossOrigin
-	@PutMapping("/update/users")
-	public @ResponseBody String updateUser(@RequestBody User updateUser) {
-		
-		// check if user exists, then update them
-		
-		Optional<User> found = userRepo.findById(updateUser.getId());
-		
-		if(found.isPresent()) {
-			userRepo.save(updateUser);
-			return "Saved: " + updateUser.toString();
-		}
-		else {
-			return "Could not update student, the id = " + updateUser.getId() + " doesn't exist";
-		}
-		
-	}
-	
-	//Delete
-	@DeleteMapping("/delete/users/{id}")
-	public ResponseEntity<String> deleteStudent(@PathVariable long id) {
-		
-		Optional<User> found = userRepo.findById(id);
-		
-		if(found.isPresent()) {
-			
-			userRepo.deleteById(id);
-			
-			return ResponseEntity.status(200).body("Deleted User with id = " + id);	
-		}
-		else {
-			return ResponseEntity.status(400)
-					.header("User id", id + "")
-					.body("User with id = " + id + " not found");
-		}
-			
-	}
-	
-	
-	
-=======
 
->>>>>>> main
 }
