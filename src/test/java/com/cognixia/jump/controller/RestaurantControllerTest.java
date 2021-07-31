@@ -59,7 +59,7 @@ class RestaurantControllerTest {
 	private RestaurantController controller;
 
 	@Test
-	void testGetAllRestaurants_success() throws Exception {
+	void getAllRestaurants_success() throws Exception {
 
 		// set up
 		String uri = STARTING_URI + "restaurants";
@@ -108,7 +108,7 @@ class RestaurantControllerTest {
 	}
 
 	@Test
-	void testGetAllRestaurants_emptyResult() throws Exception {
+	void getAllRestaurants_emptyResult() throws Exception {
 		String uri = STARTING_URI + "restaurants";
 
 		List<Restaurant> mockRestaurants = Arrays.asList();
@@ -132,7 +132,7 @@ class RestaurantControllerTest {
 	}
 
 	@Test
-	void testGetRestaurantById_success() throws Exception {
+	void getRestaurantById_success() throws Exception {
 		long id = 1;
 		String uri = STARTING_URI + "restaurants/id/{restaurant_id}";
 
@@ -166,7 +166,7 @@ class RestaurantControllerTest {
 	}
 
 	@Test
-	void testGetRestaurantByName_success() throws Exception {
+	void getRestaurantByName_success() throws Exception {
 		String name = "McDonalds";
 		String uri = STARTING_URI + "restaurants/name/{restaurant_name}";
 
@@ -200,7 +200,7 @@ class RestaurantControllerTest {
 	}
 
 	@Test
-	void testGetRestaurantById_badId() throws Exception {
+	void getRestaurantById_badId() throws Exception {
 		long id = -1;
 		String uri = STARTING_URI + "restaurants/id/{restaurant_id}";
 		when(controller.getRestaurantById(id)).thenThrow(new ResourceNotFoundException(""));
@@ -211,7 +211,7 @@ class RestaurantControllerTest {
 	}
 
 	@Test
-	void testGetRestaurantByName_badName() throws Exception {
+	void getRestaurantByName_badName() throws Exception {
 		String name = "hkldfjg";
 		String uri = STARTING_URI + "restaurants/name/{restaurant_name}";
 		when(controller.getRestaurantByName(name)).thenThrow(new ResourceNotFoundException(""));
@@ -222,7 +222,7 @@ class RestaurantControllerTest {
 	}
 
 	@Test
-	void testAddRestaurant_success() throws Exception {
+	void addRestaurant_success() throws Exception {
 		String uri = STARTING_URI + "restaurants";
 		String json = "{\n" + " \"id\": -1,\n" + " \"restaurantName\": \"McDonalds\",\n"
 				+ " \"description\": \"fast food\",\n" + " \"address\": \"1011 S Lake Dr, Lexington SC, 29072\",\n"
@@ -276,7 +276,18 @@ class RestaurantControllerTest {
 	}
 	
 	@Test
-	void testEditRestaurant_success() throws Exception {
+	void deleteRestaurant_badId() throws Exception {
+		long id = -10;
+		String uri = STARTING_URI + "restaurants/id/{restaurant_id}";
+		when(controller.deleteRestaurantById(id)).thenThrow(new ResourceNotFoundException("Restaurant with id " + id + " not found"));
+
+		mockMvc.perform(delete(uri, id)).andExpect(
+				result -> Assertions.assertTrue(result.getResolvedException() instanceof ResourceNotFoundException));
+
+	}
+	
+	@Test
+	void editRestaurant_success() throws Exception {
 		String uri = STARTING_URI + "update/restaurants";
 		String json = "{\n" + " \"id\": -1,\n" + " \"restaurantName\": \"McDonalds\",\n"
 				+ " \"description\": \"fast food\",\n" + " \"address\": \"1011 S Lake Dr, Lexington SC, 29072\",\n"
@@ -302,5 +313,16 @@ class RestaurantControllerTest {
 				.andExpect(jsonPath("$.phoneNumber").value(restaurant.getBody().getPhoneNumber()))
 				.andExpect(jsonPath("$.rating").value(restaurant.getBody().getRating()))
 				.andExpect(jsonPath("$.reviews").value(restaurant.getBody().getReviews()));
+	}
+	
+	@Test
+	void editRestaurant_badId() throws Exception {
+		long id = -10;
+		String uri = STARTING_URI + "restaurants/id/{restaurant_id}";
+		when(controller.deleteRestaurantById(id)).thenThrow(new ResourceNotFoundException("Restaurant with id " + id + " not found"));
+
+		mockMvc.perform(put(uri, id)).andExpect(
+				result -> Assertions.assertTrue(result.getResolvedException() instanceof ResourceNotFoundException));
+
 	}
 }
