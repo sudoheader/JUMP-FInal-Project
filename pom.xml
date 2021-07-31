@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.cognixia.jump.springcloud</groupId>
 	<artifactId>jump-Final-Project</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>jump-Final-Project</name>
 	<description>Restaurant review site</description>
 	<packaging>jar</packaging>

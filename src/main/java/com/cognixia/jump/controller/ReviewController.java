@@ -34,69 +34,147 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/api")
 @RestController
 public class ReviewController {
-	
-	@Autowired
-	ReviewRepo reviewRepo;
-	
-	@Autowired
-	UserRepo userRepo;
 
 	@Autowired
-	RestaurantRepo restaurantRepo;
-	
+	ReviewRepo reviewRepo;
+
 	@Autowired
 	RestaurantController restaurantController;
-	
-	//@GetMapping("/reviews/{review_id}")
-	//public ResponseEntity<Review> getReviewsById(@Valid @PathVariable("review_id") Long review_id) throws InvalidInputException {
-	//Optional<Review> todoOpt = repo.findById(review_id);
-	
+
+	@Autowired
+	UserController userController;
+
 	@GetMapping("/reviews")
 	@ApiOperation(value = "Find all reviews", notes = "Get all reviews", response = Review.class)
 	public ResponseEntity<List<Review>> getReviews() {
-		return ResponseEntity.status(HttpStatus.OK)
-				 .body(reviewRepo.findAll());
+		return ResponseEntity.status(HttpStatus.OK).body(reviewRepo.findAll());
 	}
 
-	@GetMapping("/user/{userId}/reviews")
-	public ResponseEntity<List<Review>> getUserReviews(@PathVariable long userId) throws ResourceNotFoundException{
-		if(!userRepo.existsById(userId)) {
-			throw new ResourceNotFoundException("User with user id " + userId + " not found.");
+	@GetMapping("/reviews/id/{review_id}")
+	@ApiOperation(value = "Find a review by its id", notes = "Return the review", response = Review.class)
+	public ResponseEntity<Review> getReviewById(@Valid @PathVariable("review_id") Long review_id)
+			throws ResourceNotFoundException {
+		if (!reviewRepo.existsById(review_id)) {
+			throw new ResourceNotFoundException("Review with id " + review_id + " not found");
 		}
-		List<Review> reviews = userRepo.findById(userId).get().getReviews();
+
+		Review review = reviewRepo.findById(review_id).get();
+
+		return ResponseEntity.status(HttpStatus.OK).body(review);
+	}
+
+	@GetMapping("/user/id/{userId}/reviews")
+	public ResponseEntity<List<Review>> getUserReviewsListById(@PathVariable long userId)
+			throws ResourceNotFoundException {
+		User user = userController.getUserById(userId).getBody();
+		List<Review> reviews = user.getReviews();
 		return ResponseEntity.status(HttpStatus.OK).body(reviews);
 	}
-	
-	@GetMapping("/restaurant/{restaurantId}/reviews")
-	public ResponseEntity<List<Review>> getRestaurantsReviews(@PathVariable long restaurantId) throws ResourceNotFoundException{
-		if(!restaurantRepo.existsById(restaurantId)) {
-			throw new ResourceNotFoundException("Restaurant with id " + restaurantId + " not found.");
+
+	@GetMapping("/user/id/{userId}/review")
+	public ResponseEntity<Review> getUserReviewById(@PathVariable long userId, @RequestParam long id)
+			throws ResourceNotFoundException {
+		User user = userController.getUserById(userId).getBody(); // have this function handle the exceptions
+		List<Review> reviewlist = user.getReviews();
+
+		// iterate through list until id match is found
+
+		for (Review r : reviewlist) {
+			if (r.getReviewId() == id) {
+				return ResponseEntity.status(HttpStatus.OK).body(r);
+			}
 		}
-		List<Review> reviews = restaurantRepo.findById(restaurantId).get().getReviews();
+		// if id match wasn't found, throw exception
+		throw new ResourceNotFoundException("Review with id " + id + " not found.");
+	}
+
+	@GetMapping("/restaurant/id/{restaurantId}/reviews")
+	public ResponseEntity<List<Review>> getRestaurantsReviewsListById(@PathVariable long restaurantId)
+			throws ResourceNotFoundException {
+		Restaurant restaurant = restaurantController.getRestaurantById(restaurantId).getBody();
+		List<Review> reviews = restaurant.getReviews();
 		return ResponseEntity.status(HttpStatus.OK).body(reviews);
 	}
-	
-	/*
-	 * TODO: double check this one
-	 */
-	@PostMapping("/restaurants/{restaurantId}/reviews")
-	public ResponseEntity<Review> addRestaurantReview(@PathVariable long restaurantId, @Valid @RequestBody Review review) throws ResourceNotFoundException{
+
+	@GetMapping("/restaurant/id/{restaurantId}/review")
+	public ResponseEntity<Review> getRestaurantReviewById(@PathVariable long restaurantId, @RequestParam long id)
+			throws ResourceNotFoundException {
+		Restaurant restaurant = restaurantController.getRestaurantById(restaurantId).getBody(); // have this function
+																								// handle the exceptions
+
+		List<Review> reviewlist = restaurant.getReviews();
+
+		// iterate through list until id match is found
+
+		for (Review r : reviewlist) {
+			if (r.getReviewId() == id) {
+				return ResponseEntity.status(HttpStatus.OK).body(r);
+			}
+		}
+		// if id match wasn't found, throw exception
+		throw new ResourceNotFoundException("Review with id " + id + " not found.");
+	}
+
+
+	@PostMapping("/restaurants/id/{restaurantId}/reviews")
+	public ResponseEntity<Review> addRestaurantReview(@PathVariable long restaurantId,
+			@Valid @RequestBody Review review, @RequestParam long userId) throws ResourceNotFoundException {
 		review.setReviewId(-1L);
-		Review newReview = reviewRepo.save(review); 
-		
-		//recalculate restaurant rating
-		List<Review> reviews = getRestaurantsReviews(restaurantId).getBody();
-		double sum = 0;
-		for(Review r : reviews) {
-			sum += r.getRating();
-		}
-		double avg = sum/reviews.size();
-		
 		Restaurant restaurant = (Restaurant) restaurantController.getRestaurantById(restaurantId).getBody();
-		restaurant.setRating(avg);
-		restaurantRepo.save(restaurant); //update restaurant with new rating
+		User user = (User) userController.getUserById(userId).getBody();
 		
+		review.setRestaurant(restaurant);
+		review.setUser(user);
+		
+		Review newReview = reviewRepo.save(review);
+
+		recalculateRestaurantRating(restaurantId);
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(newReview);
 	}
-	
+
+	// HELPER FUNCTION
+	private void recalculateRestaurantRating(Long id) throws ResourceNotFoundException {
+		List<Review> reviews = getRestaurantsReviewsListById(id).getBody();
+		double sum = 0;
+		for (Review r : reviews) {
+			sum += r.getRating();
+		}
+		double avg = sum / reviews.size();
+
+		Restaurant restaurant = (Restaurant) restaurantController.getRestaurantById(id).getBody();
+		restaurant.setRating(avg);
+		restaurantController.updateRestaurant(restaurant);
+	}
+
+	@DeleteMapping("/user/id/{userId}/review")
+	@ApiOperation(value = "Delete User review by id", notes = "Delete user review by id (if exists)", response = Review.class)
+	public ResponseEntity<Review> deleteUserReviewById(@PathVariable long userId, @RequestParam int id)
+			throws ResourceNotFoundException {
+		Review deleted = (Review) getUserReviewById(userId, id).getBody();
+		reviewRepo.deleteReview(deleted.getReviewId());
+		
+		recalculateRestaurantRating(deleted.getRestaurant().getId());
+
+		return ResponseEntity.status(HttpStatus.OK).body(deleted);
+	}
+
+	@PutMapping("/user/id/{userId}/review")
+	@ApiOperation(value = "Update User review by id", notes = "Update user review by id (if exists)", response = Review.class)
+	public ResponseEntity<Review> updateUserReviewById(@PathVariable long userId, @Valid @RequestBody Review review)
+			throws ResourceNotFoundException {
+		Review reviewObj = getReviewById(review.getReviewId()).getBody();
+		Restaurant restaurant = reviewObj.getRestaurant();
+		review.setRestaurant(restaurant);
+		
+		User user = reviewObj.getUser();
+		review.setUser(user);
+		
+		Review updated = (Review) getUserReviewById(userId, review.getReviewId()).getBody();
+		reviewRepo.save(review);
+		
+		recalculateRestaurantRating(updated.getRestaurant().getId());
+		
+		return ResponseEntity.status(HttpStatus.OK).body(review);
+	}
 }

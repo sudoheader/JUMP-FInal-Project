@@ -85,7 +85,7 @@ class UserControllerTest {
 		
 		// execute request
 		mockMvc.perform( get(uri) )
-				.andDo( print() ) // print of the respnse
+				//.andDo( print() ) // print of the respnse
 				.andExpect( status().isOk() ) // check I have a 200 status code
 				.andExpect( content().contentType(MediaType.APPLICATION_JSON_VALUE) ) // check if json is returned
 				.andExpect( jsonPath("$.length()").value( users.getBody().size() ) ) // checks size of array of objects returned
@@ -133,7 +133,7 @@ class UserControllerTest {
 		when( controller.getAllUsers()).thenReturn( users );
 		
 		mockMvc.perform( get(uri) )
-				.andDo( print() ) 
+				//.andDo( print() ) 
 				.andExpect( status().isOk() ) 
 				.andExpect( content().contentType(MediaType.APPLICATION_JSON_VALUE) ) 
 				.andExpect( jsonPath("$.length()").value( users.getBody().size() ) )
@@ -162,7 +162,7 @@ class UserControllerTest {
 		when(controller.getUserById(id)).thenReturn(user);
 		
 		mockMvc.perform( get(uri, id) )
-		.andDo(print())
+		//.andDo(print())
 		.andExpect( status().isOk() )
 		.andExpect( content().contentType(MediaType.APPLICATION_JSON_VALUE) )
 		.andExpect( jsonPath("$.id").value(user.getBody().getId()) )
@@ -185,7 +185,6 @@ class UserControllerTest {
 		
 		mockMvc.perform(get(uri, id))
 		 .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof ResourceNotFoundException));
-		
 	}
 	
 	@Test
@@ -215,7 +214,7 @@ class UserControllerTest {
 		mockMvc.perform(post(uri)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
-			.andDo(print())
+			//.andDo(print())
 			.andExpect(status().isCreated())
 			.andExpect( jsonPath("$.id").value(user.getBody().getId()) )
 			.andExpect( jsonPath("$.username").value(user.getBody().getUsername()) )
