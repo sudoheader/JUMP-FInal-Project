@@ -40,7 +40,7 @@ public class Restaurant implements Serializable{
 	private double rating;
 	
 	@OneToMany( mappedBy = "restaurant", cascade = CascadeType.ALL )
-	@JsonManagedReference
+	@JsonManagedReference(value = "secondParent")
 	private List<Review> reviews;
 	
 	public Restaurant() {
