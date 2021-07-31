@@ -1,5 +1,6 @@
 package com.cognixia.jump.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cognixia.jump.exception.InvalidInputException;
 import com.cognixia.jump.exception.ResourceNotFoundException;
 import com.cognixia.jump.model.Restaurant;
-
+import com.cognixia.jump.model.Review;
 import com.cognixia.jump.model.User;
 import com.cognixia.jump.repository.RestaurantRepo;
 
@@ -75,6 +76,8 @@ public class RestaurantController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Restaurant> addRestaurant(@Valid @RequestBody Restaurant restaurant) throws Exception {
 		restaurant.setId(-1L);
+		restaurant.setReviews(new ArrayList<Review>());
+		restaurant.setRating(0.0);
 
 		Restaurant added = restaurantRepo.save(restaurant);
 
@@ -88,6 +91,7 @@ public class RestaurantController {
 			throws ResourceNotFoundException {
 
 		Optional<Restaurant> found = restaurantRepo.findById(restaurant.getId());
+		restaurant.setReviews(new ArrayList<Review>());
 
 		if (found.isPresent()) {
 			Restaurant updated = restaurantRepo.save(restaurant);

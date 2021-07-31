@@ -304,7 +304,7 @@ class RestaurantControllerTest {
 		when(controller.updateRestaurant(Mockito.any(Restaurant.class))).thenReturn(restaurant);
 
 		mockMvc.perform(put(uri).contentType(MediaType.APPLICATION_JSON).content(json))
-		.andDo(print())
+		//.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value(restaurant.getBody().getId()))
 				.andExpect(jsonPath("$.restaurantName").value(restaurant.getBody().getRestaurantName()))
@@ -315,15 +315,23 @@ class RestaurantControllerTest {
 				.andExpect(jsonPath("$.reviews").value(restaurant.getBody().getReviews()));
 	}
 	
-	/*
-	@Test
+	
+	/*@Test
 	void editRestaurant_badId() throws Exception {
-		long id = -10;
-		String uri = STARTING_URI + "restaurants/id/{restaurant_id}";
-		//when(controller.updateRestaurant(id)).thenThrow(new ResourceNotFoundException("Restaurant with id " + id + " not found"));
+		String json = "{\n" + " \"id\": -999,\n" + " \"restaurantName\": \"McDonalds\",\n"
+				+ " \"description\": \"fast food\",\n" + " \"address\": \"1011 S Lake Dr, Lexington SC, 29072\",\n"
+				+ " \"phoneNumber\": \"8039578808\",\n" + " \"rating\": 4.2,\n" + " \"reviews\": []\n" + "}";
+		long id = -999;
+		Restaurant mockRestaurant = new Restaurant(id, "McDonalds", "fast food", "1011 S Lake Dr, Lexington SC, 29072",
+				"8039578808", 4.0, new ArrayList<Review>());
+	
+		
+		String uri = STARTING_URI + "update/restaurants";
+		when(controller.updateRestaurant(mockRestaurant)).thenThrow(new ResourceNotFoundException("Restaurant with id " + id + " not found"));
 
-		mockMvc.perform(put(uri, id)).andExpect(
-				result -> Assertions.assertTrue(result.getResolvedException() instanceof ResourceNotFoundException));
+		mockMvc.perform(put(uri).contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(
+						result -> Assertions.assertTrue(result.getResolvedException() instanceof ResourceNotFoundException));
 
 	}*/
 }

@@ -1,5 +1,6 @@
 package com.cognixia.jump.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cognixia.jump.exception.InvalidInputException;
 import com.cognixia.jump.exception.ResourceNotFoundException;
+import com.cognixia.jump.model.Review;
 import com.cognixia.jump.model.User;
 import com.cognixia.jump.repository.UserRepo;
 
@@ -65,8 +67,9 @@ public class UserController {
 	public ResponseEntity<User> addUser(@Valid @RequestBody User user) throws Exception {
 
 		user.setId(-1L);
+		user.setReviews(new ArrayList<Review>());
 
-		user.newReview();
+		//user.newReview();
 
 		User newUser = userRepo.save(user);
 
@@ -80,6 +83,7 @@ public class UserController {
 	public ResponseEntity<User> updateUser(@Valid @RequestBody User user) throws ResourceNotFoundException {
 		
 		Optional<User> found =  userRepo.findById(user.getId());
+		user.setReviews(new ArrayList<Review>());
 
 		if( found.isPresent() ) {
 			User updated = userRepo.save(user);

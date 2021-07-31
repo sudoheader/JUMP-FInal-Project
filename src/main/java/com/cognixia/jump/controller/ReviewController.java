@@ -115,14 +115,17 @@ public class ReviewController {
 		throw new ResourceNotFoundException("Review with id " + id + " not found.");
 	}
 
-	/*
-	 * TODO: double check this one assume userId is passed in request body for
-	 * review
-	 */
+
 	@PostMapping("/restaurants/id/{restaurantId}/reviews")
 	public ResponseEntity<Review> addRestaurantReview(@PathVariable long restaurantId,
-			@Valid @RequestBody Review review) throws ResourceNotFoundException {
+			@Valid @RequestBody Review review, @RequestParam long userId) throws ResourceNotFoundException {
 		review.setReviewId(-1L);
+		Restaurant restaurant = (Restaurant) restaurantController.getRestaurantById(restaurantId).getBody();
+		User user = (User) userController.getUserById(userId).getBody();
+		
+		review.setRestaurant(restaurant);
+		review.setUser(user);
+		
 		Review newReview = reviewRepo.save(review);
 
 		recalculateRestaurantRating(restaurantId);
@@ -144,7 +147,6 @@ public class ReviewController {
 		restaurantController.updateRestaurant(restaurant);
 	}
 
-	//TODO: test this
 	@DeleteMapping("/user/id/{userId}/review")
 	@ApiOperation(value = "Delete User review by id", notes = "Delete user review by id (if exists)", response = Review.class)
 	public ResponseEntity<Review> deleteUserReviewById(@PathVariable long userId, @RequestParam int id)
@@ -155,16 +157,20 @@ public class ReviewController {
 		recalculateRestaurantRating(deleted.getRestaurant().getId());
 
 		return ResponseEntity.status(HttpStatus.OK).body(deleted);
-
 	}
 
-	//TODO: test this
 	@PutMapping("/user/id/{userId}/review")
 	@ApiOperation(value = "Update User review by id", notes = "Update user review by id (if exists)", response = Review.class)
 	public ResponseEntity<Review> updateUserReviewById(@PathVariable long userId, @Valid @RequestBody Review review)
 			throws ResourceNotFoundException {
+		Review reviewObj = getReviewById(review.getReviewId()).getBody();
+		Restaurant restaurant = reviewObj.getRestaurant();
+		review.setRestaurant(restaurant);
+		
+		User user = reviewObj.getUser();
+		review.setUser(user);
+		
 		Review updated = (Review) getUserReviewById(userId, review.getReviewId()).getBody();
-		review.setUser(updated.getUser());
 		reviewRepo.save(review);
 		
 		recalculateRestaurantRating(updated.getRestaurant().getId());
