@@ -60,6 +60,7 @@ public class RestaurantController {
 	}
 
 	@GetMapping("/restaurants/name/{name}")
+	@ApiOperation(value = "Get a restaurant by its name", notes = "Return the restaurant", response = Restaurant.class)
 	public ResponseEntity<Restaurant> getRestaurantByName(@Valid @PathVariable("name") String name)
 			throws ResourceNotFoundException {
 		if (!restaurantRepo.existsByRestaurantName(name)) {
@@ -73,6 +74,7 @@ public class RestaurantController {
 
 	// CREATE
 	@PostMapping("/restaurants")
+	@ApiOperation(value = "Add a restaurant", notes = "Instantiate a restaurant", response = Restaurant.class)
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Restaurant> addRestaurant(@Valid @RequestBody Restaurant restaurant) throws Exception {
 		restaurant.setId(-1L);
@@ -104,7 +106,7 @@ public class RestaurantController {
 
 	// DELETE
 	@DeleteMapping("/restaurants/id/{restaurant_id}")
-	@ApiOperation(value = "Delete a restaurant by id", notes = "Delete restaurant", response = User.class)
+	@ApiOperation(value = "Delete a restaurant by id", notes = "Delete restaurant", response = Restaurant.class)
 	public ResponseEntity<Restaurant> deleteRestaurantById(@Valid @PathVariable Long restaurant_id)
 			throws ResourceNotFoundException {
 

@@ -64,6 +64,7 @@ public class ReviewController {
 	}
 
 	@GetMapping("/user/id/{userId}/reviews")
+	@ApiOperation(value = "Find reviews of a user", notes = "Get all reviews of a certain user", response = Review.class)
 	public ResponseEntity<List<Review>> getUserReviewsListById(@PathVariable long userId)
 			throws ResourceNotFoundException {
 		User user = userController.getUserById(userId).getBody();
@@ -72,6 +73,7 @@ public class ReviewController {
 	}
 
 	@GetMapping("/user/id/{userId}/review")
+	@ApiOperation(value = "Find a review by the review id", notes = "Check if exists and return the review", response = Review.class)
 	public ResponseEntity<Review> getUserReviewById(@PathVariable long userId, @RequestParam long id)
 			throws ResourceNotFoundException {
 		User user = userController.getUserById(userId).getBody(); // have this function handle the exceptions
@@ -89,6 +91,7 @@ public class ReviewController {
 	}
 
 	@GetMapping("/restaurant/id/{restaurantId}/reviews")
+	@ApiOperation(value = "Use a restaurant id and return its reviews", notes = "Based on a restaurants id, return its reviews", response = Review.class)
 	public ResponseEntity<List<Review>> getRestaurantsReviewsListById(@PathVariable long restaurantId)
 			throws ResourceNotFoundException {
 		Restaurant restaurant = restaurantController.getRestaurantById(restaurantId).getBody();
@@ -97,6 +100,7 @@ public class ReviewController {
 	}
 
 	@GetMapping("/restaurant/id/{restaurantId}/review")
+	@ApiOperation(value = "Find a review of a restaurant by id", notes = "Check if review id exists for a restaurant", response = Review.class)
 	public ResponseEntity<Review> getRestaurantReviewById(@PathVariable long restaurantId, @RequestParam long id)
 			throws ResourceNotFoundException {
 		Restaurant restaurant = restaurantController.getRestaurantById(restaurantId).getBody(); // have this function
@@ -117,6 +121,7 @@ public class ReviewController {
 
 
 	@PostMapping("/restaurants/id/{restaurantId}/reviews")
+	@ApiOperation(value = "Add a review of a restaurant", notes = "Check restaurant id and add review", response = Review.class)
 	public ResponseEntity<Review> addRestaurantReview(@PathVariable long restaurantId,
 			@Valid @RequestBody Review review, @RequestParam long userId) throws ResourceNotFoundException {
 		review.setReviewId(-1L);
