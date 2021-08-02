@@ -13,23 +13,23 @@ import com.cognixia.jump.model.User;
 public class MyUserDetails implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	// attributes from User that are needed to do our authorization/authentication
 	private String username;
 	private String password;
 	private boolean enabled;
 	private List<GrantedAuthority> authorities;
-	
+
 	public MyUserDetails(String username) {
 		this.username = username;
 	}
-	
+
 	public MyUserDetails(User user) {
 		this.username = user.getUsername();
 		this.password = user.getPassword();
 		this.authorities = Arrays.asList(new SimpleGrantedAuthority(user.getRole().name()));
 	}
-	
+
 	public MyUserDetails() {}
 
 	@Override

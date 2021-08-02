@@ -9,15 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.cognixia.jump.exception.InvalidInputException;
 import com.cognixia.jump.exception.ResourceNotFoundException;
@@ -29,12 +21,14 @@ import io.swagger.annotations.ApiOperation;
 
 @RequestMapping("/api")
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
 	@Autowired
 	UserRepo userRepo;
 
 	//READ
+	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/users")
 	@ApiOperation(value = "Find all Users", notes = "Get all user names", response = User.class)
 	public ResponseEntity<List<User>> getAllUsers() {
@@ -45,6 +39,7 @@ public class UserController {
 	}
 	
 	//READ
+	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/users/{user_id}")
 	@ApiOperation(value = "Find users by id",
 	  notes = "Get the user with a specific id",
@@ -61,6 +56,7 @@ public class UserController {
 	}
 	
 	//CREATE
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("/users")
 	@ApiOperation(value = "Add a user", notes = "Initialize a new user", response = User.class)
 	@ResponseStatus(HttpStatus.CREATED)
@@ -75,7 +71,8 @@ public class UserController {
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
 	}
-	
+
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PutMapping("/users")
 	@ApiOperation( value = "Update User",
 	   notes = "Update user (if exists) in the database",
@@ -95,7 +92,8 @@ public class UserController {
 			throw new ResourceNotFoundException("User with id " + user.getId() + " not found");
 		}
 	}
-	
+
+	@CrossOrigin(origins = "http://localhost:3000")
 	@DeleteMapping("/users/{user_id}")
 	@ApiOperation( value = "Delete User by id",
 	   notes = "Delete user (if exists) in the database",

@@ -8,15 +8,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.cognixia.jump.exception.InvalidInputException;
 import com.cognixia.jump.exception.ResourceNotFoundException;
@@ -33,6 +25,7 @@ import io.swagger.annotations.ApiOperation;
 
 @RequestMapping("/api")
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class ReviewController {
 
 	@Autowired
@@ -44,12 +37,14 @@ public class ReviewController {
 	@Autowired
 	UserController userController;
 
+	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/reviews")
 	@ApiOperation(value = "Find all reviews", notes = "Get all reviews", response = Review.class)
 	public ResponseEntity<List<Review>> getReviews() {
 		return ResponseEntity.status(HttpStatus.OK).body(reviewRepo.findAll());
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/reviews/id/{review_id}")
 	@ApiOperation(value = "Find a review by its id", notes = "Return the review", response = Review.class)
 	public ResponseEntity<Review> getReviewById(@Valid @PathVariable("review_id") Long review_id)
@@ -63,6 +58,7 @@ public class ReviewController {
 		return ResponseEntity.status(HttpStatus.OK).body(review);
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/user/id/{userId}/reviews")
 	public ResponseEntity<List<Review>> getUserReviewsListById(@PathVariable long userId)
 			throws ResourceNotFoundException {
@@ -71,6 +67,7 @@ public class ReviewController {
 		return ResponseEntity.status(HttpStatus.OK).body(reviews);
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/user/id/{userId}/review")
 	public ResponseEntity<Review> getUserReviewById(@PathVariable long userId, @RequestParam long id)
 			throws ResourceNotFoundException {
@@ -88,6 +85,7 @@ public class ReviewController {
 		throw new ResourceNotFoundException("Review with id " + id + " not found.");
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/restaurant/id/{restaurantId}/reviews")
 	public ResponseEntity<List<Review>> getRestaurantsReviewsListById(@PathVariable long restaurantId)
 			throws ResourceNotFoundException {
@@ -96,6 +94,7 @@ public class ReviewController {
 		return ResponseEntity.status(HttpStatus.OK).body(reviews);
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/restaurant/id/{restaurantId}/review")
 	public ResponseEntity<Review> getRestaurantReviewById(@PathVariable long restaurantId, @RequestParam long id)
 			throws ResourceNotFoundException {
@@ -116,6 +115,7 @@ public class ReviewController {
 	}
 
 
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("/restaurants/id/{restaurantId}/reviews")
 	public ResponseEntity<Review> addRestaurantReview(@PathVariable long restaurantId,
 			@Valid @RequestBody Review review, @RequestParam long userId) throws ResourceNotFoundException {
@@ -147,6 +147,7 @@ public class ReviewController {
 		restaurantController.updateRestaurant(restaurant);
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000")
 	@DeleteMapping("/user/id/{userId}/review")
 	@ApiOperation(value = "Delete User review by id", notes = "Delete user review by id (if exists)", response = Review.class)
 	public ResponseEntity<Review> deleteUserReviewById(@PathVariable long userId, @RequestParam int id)
@@ -159,6 +160,7 @@ public class ReviewController {
 		return ResponseEntity.status(HttpStatus.OK).body(deleted);
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PutMapping("/user/id/{userId}/review")
 	@ApiOperation(value = "Update User review by id", notes = "Update user review by id (if exists)", response = Review.class)
 	public ResponseEntity<Review> updateUserReviewById(@PathVariable long userId, @Valid @RequestBody Review review)

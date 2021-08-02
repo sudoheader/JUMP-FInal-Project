@@ -9,16 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.cognixia.jump.exception.InvalidInputException;
 import com.cognixia.jump.exception.ResourceNotFoundException;
@@ -31,12 +22,14 @@ import io.swagger.annotations.ApiOperation;
 
 @RequestMapping("/api")
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class RestaurantController {
 
 	@Autowired
 	RestaurantRepo restaurantRepo;
 
 	// READ
+	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/restaurants")
 	@ApiOperation(value = "Find all restaurants", notes = "Get all restaurant names", response = Restaurant.class)
 	public ResponseEntity<List<Restaurant>> getAllRestaurants() {
@@ -46,6 +39,7 @@ public class RestaurantController {
 	}
 
 	// READ
+	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/restaurants/id/{restaurant_id}")
 	@ApiOperation(value = "Find restaurant by its id", notes = "Return the restaurant", response = Restaurant.class)
 	public ResponseEntity<Restaurant> getRestaurantById(@Valid @PathVariable("restaurant_id") Long restaurant_id)
@@ -59,6 +53,7 @@ public class RestaurantController {
 		return ResponseEntity.status(HttpStatus.OK).body(restaurant);
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/restaurants/name/{name}")
 	public ResponseEntity<Restaurant> getRestaurantByName(@Valid @PathVariable("name") String name)
 			throws ResourceNotFoundException {
@@ -72,6 +67,7 @@ public class RestaurantController {
 	}
 
 	// CREATE
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("/restaurants")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Restaurant> addRestaurant(@Valid @RequestBody Restaurant restaurant) throws Exception {
@@ -85,6 +81,7 @@ public class RestaurantController {
 	}
 
 	// UPDATE
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PutMapping("/update/restaurants")
 	@ApiOperation(value = "Update a restaurant", notes = "Restaurant to be updated", response = Restaurant.class)
 	public ResponseEntity<Restaurant> updateRestaurant(@Valid @RequestBody Restaurant restaurant)
@@ -103,6 +100,7 @@ public class RestaurantController {
 	}
 
 	// DELETE
+	@CrossOrigin(origins = "http://localhost:3000")
 	@DeleteMapping("/restaurants/id/{restaurant_id}")
 	@ApiOperation(value = "Delete a restaurant by id", notes = "Delete restaurant", response = User.class)
 	public ResponseEntity<Restaurant> deleteRestaurantById(@Valid @PathVariable Long restaurant_id)
