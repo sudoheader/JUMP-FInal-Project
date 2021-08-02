@@ -44,8 +44,8 @@ public class SwaggerConfig {
 				"1.0",
 				"Free to use", 
 				new Contact("Austin, Raymond, Sabeet, Nikita","https://github.com/JUMP-goat/JUMP-Final-Project", "73669412+abrooks72@users.noreply.github.com, sudoheader@users.noreply.github.com, 30205922+sabeet@users.noreply.github.com, 26977305+nikitatran@users.noreply.github.com"),
-				"API License", 
-				"Open Source", 
+				"MIT License",
+				"https://www.mit.edu/~amini/LICENSE.md",
 				Collections.emptyList()
 				);
 	}
