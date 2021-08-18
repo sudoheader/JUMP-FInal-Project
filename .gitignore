@@ -34,3 +34,4 @@ build/
 
 ### AWS ###
 /src/main/resources/application-dev-group.properties
+/bin/
